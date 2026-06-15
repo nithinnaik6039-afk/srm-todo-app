@@ -1,0 +1,17 @@
+{
+  "name": "srm-todo-app",
+  "version": "1.0.0",
+  "description": "SRM Organization To-Do App — Full Stack MERN Application",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build",
+    "start": "cd server && node server.js",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["srm", "todo", "mern", "fullstack"],
+  "license": "ISC"
+}
