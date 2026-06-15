@@ -78,32 +78,22 @@ export default function StudyMaterials() {
     finally { setUploading(false); }
   };
 
-  const handleDownload = async (mat) => {
+  const handleDownload = (mat) => {
     try {
-      const { data } = await api.patch(`/materials/${mat._id}/download`);
+      const token = localStorage.getItem('token');
+      // Construct endpoint with auth token in query string
+      const downloadUrl = `/api/materials/${mat._id}/download-file?token=${token}`;
       
-      // Extract filename from stored fileUrl (e.g. http://localhost:8000/uploads/filename)
-      const filename = data.fileUrl.substring(data.fileUrl.lastIndexOf('/') + 1);
-      const proxiedUrl = `/uploads/${filename}`;
-
-      // Fetch the file as a blob using native fetch
-      const response = await fetch(proxiedUrl);
-      if (!response.ok) throw new Error('File download failed');
-      const blob = await response.blob();
-
-      // Create a temporary object URL and trigger download link
-      const blobUrl = window.URL.createObjectURL(blob);
+      // Trigger a clean native download in a new tab to bypass pop-up blockers
       const link = document.createElement('a');
-      link.href = blobUrl;
-      link.setAttribute('download', mat.filename || filename);
+      link.href = downloadUrl;
+      link.target = '_blank';
       document.body.appendChild(link);
       link.click();
-
-      // Clean up
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
 
-      load(); // refresh download count
+      // Refresh list to update download count UI
+      setTimeout(load, 1500);
     } catch (err) {
       console.error(err);
       toast.error('Download failed');

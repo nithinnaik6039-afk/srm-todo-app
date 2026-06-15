@@ -12,9 +12,13 @@ dotenv.config();
 
 import authRoutes       from '../routes/authRoutes.js';
 import todoRoutes       from '../routes/todoRoutes.js';
+import timeRoutes       from '../routes/timeRoutes.js';
 import attendanceRoutes from '../routes/attendanceRoutes.js';
 import pollRoutes       from '../routes/pollRoutes.js';
+import commentRoutes    from '../routes/commentRoutes.js';
 import iaRoutes         from '../routes/iaRoutes.js';
+import materialRoutes   from '../routes/materialRoutes.js';
+import feedbackRoutes   from '../routes/feedbackRoutes.js';
 import timetableRoutes  from '../routes/timetableRoutes.js';
 import userRoutes       from '../routes/userRoutes.js';
 import { getSharedTodo } from '../controllers/todoController.js';
@@ -36,9 +40,13 @@ if (mongoose.connection.readyState === 0) {
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth',       authRoutes);
 app.use('/api/todos',      todoRoutes);
+app.use('/api/time',       timeRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/polls',      pollRoutes);
+app.use('/api/comments',   commentRoutes);
 app.use('/api/ia',         iaRoutes);
+app.use('/api/materials',  materialRoutes);
+app.use('/api/feedback',   feedbackRoutes);
 app.use('/api/timetable',  timetableRoutes);
 app.use('/api/users',      userRoutes);
 app.get('/api/shared/:token', getSharedTodo);

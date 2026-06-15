@@ -68,3 +68,36 @@ export const trackDownload = async (req, res, next) => {
     res.json({ success: true, fileUrl: material.fileUrl });
   } catch (error) { next(error); }
 };
+
+// GET /api/materials/:id/download-file — Direct file download link
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const trackDownloadFile = async (req, res, next) => {
+  try {
+    const material = await Material.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { downloads: 1 } },
+      { new: true }
+    );
+    if (!material) return res.status(404).json({ message: 'Material not found' });
+
+    // Extract filename from stored fileUrl (e.g. http://localhost:8000/uploads/filename)
+    const filename = material.fileUrl.substring(material.fileUrl.lastIndexOf('/') + 1);
+    
+    // Resolve absolute file path (uploads folder is at server/uploads, controller is at server/controllers)
+    const filePath = path.resolve(__dirname, '../uploads', filename);
+
+    // Verify file exists on the server to prevent crash
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: 'File not found on server' });
+    }
+
+    // Serve the file as an attachment download
+    res.download(filePath, material.filename || filename);
+  } catch (error) { next(error); }
+};
