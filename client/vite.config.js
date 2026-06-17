@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',   // expose to all network interfaces (WiFi, LAN, mobile)
+    allowedHosts: true, // Allow any host (tunnels like localtunnel, serveo, localhost.run, etc.)
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
